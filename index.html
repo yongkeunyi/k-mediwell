@@ -333,32 +333,59 @@ select.form-control option { background:#1a2e1e; color:#fff; }
 
 /* ── PROFESSOR ── */
 .professor { background:#0f1e14; }
-.prof-inner {
-  max-width:1000px; margin:0 auto;
-  display:grid; grid-template-columns:280px 1fr; gap:60px; align-items:start;
+.prof-inner { max-width:1100px; margin:0 auto; }
+.prof-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:48px;
 }
+@media(max-width:900px){ .prof-grid { grid-template-columns:1fr 1fr; } }
 .prof-card {
   background:rgba(255,255,255,0.04);
   border:1px solid rgba(200,168,75,0.25); border-radius:16px; padding:32px;
-  text-align:center;
+  text-align:center; position:relative; overflow:hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.prof-card:hover { border-color:rgba(200,168,75,0.6); transform:translateY(-4px); }
+.prof-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg, var(--gold), var(--mint));
 }
 .prof-avatar {
-  width:120px; height:120px; border-radius:50%; margin:0 auto 16px;
-  background:linear-gradient(135deg, #1a3a5c, #2d7040);
+  width:110px; height:110px; border-radius:50%; margin:0 auto 16px;
   display:flex; align-items:center; justify-content:center;
-  font-size:20px; font-weight:700; color:#fff;
+  font-size:18px; font-weight:700; color:#fff;
   border:3px solid var(--gold);
 }
+.prof-avatar.blue  { background:linear-gradient(135deg,#1a3a5c,#2d7040); }
+.prof-avatar.green { background:linear-gradient(135deg,#1a4028,#4a8c5c); }
 .prof-name { font-size:20px; font-weight:700; margin-bottom:6px; }
-.prof-title { font-size:12px; color:var(--mint); line-height:1.6; }
+.prof-role {
+  display:inline-block; font-size:11px; font-weight:600;
+  background:rgba(200,168,75,0.15); color:var(--gold-lt);
+  border:1px solid rgba(200,168,75,0.3);
+  padding:4px 14px; border-radius:20px; margin-bottom:10px; letter-spacing:0.5px;
+}
+.prof-title { font-size:12px; color:var(--mint); line-height:1.7; }
 .prof-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; justify-content:center; }
 .prof-tag {
-  background:rgba(200,168,75,0.15); color:var(--gold-lt);
+  background:rgba(200,168,75,0.12); color:var(--gold-lt);
   font-size:11px; padding:4px 12px; border-radius:20px;
-  border:1px solid rgba(200,168,75,0.3);
+  border:1px solid rgba(200,168,75,0.25);
 }
-.prof-bio { font-size:15px; color:rgba(255,255,255,0.7); line-height:1.9; }
+.prof-link {
+  display:inline-flex; align-items:center; gap:6px;
+  margin-top:20px; padding:10px 22px; border-radius:30px;
+  font-size:13px; font-weight:600; text-decoration:none;
+  border:1px solid rgba(168,216,184,0.4); color:var(--mint);
+  background:rgba(45,112,64,0.15);
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.prof-link:hover {
+  background:rgba(45,112,64,0.35); border-color:var(--mint); transform:translateY(-2px);
+}
+.prof-bio { font-size:14px; color:rgba(255,255,255,0.7); line-height:1.85; margin-top:20px; text-align:left; }
 .prof-bio strong { color:#fff; }
+@media(max-width:768px){ .prof-grid { grid-template-columns:1fr; } }
+.prof-avatar.amber { background:linear-gradient(135deg,#3d2a1a,#6b4423); }
 
 /* ── CONTACT ── */
 .contact { background:#070f0a; text-align:center; }
@@ -875,29 +902,89 @@ footer {
 <!-- PROFESSOR -->
 <section class="professor" id="professor">
   <div class="prof-inner">
-    <div class="prof-card">
-      <div class="prof-avatar">이용근</div>
-      <div class="prof-name">이용근 교수</div>
-      <div class="prof-title">
-        국립공주대학교<br>스마트의료웰니스관광 대학원<br>주임교수
-      </div>
-      <div class="prof-tags">
-        <span class="prof-tag">K-MediWell</span>
-        <span class="prof-tag">뇌과학</span>
-        <span class="prof-tag">치유관광</span>
-        <span class="prof-tag">웰니스</span>
-      </div>
-    </div>
+    <div class="section-label" style="text-align:center;">RESEARCH TEAM</div>
+    <h2 class="section-title" style="text-align:center;">연구진 소개</h2>
+    <p class="section-desc" style="text-align:center; margin:0 auto;">K-MediWell 치유관광을 이끌어 가는 전문 연구진입니다.</p>
 
-    <div>
-      <div class="section-label">RESEARCH DIRECTOR</div>
-      <h2 class="section-title" style="font-size:32px;">연구 책임자 소개</h2>
-      <p class="prof-bio">
-        이용근 교수는 <strong>국립공주대학교 스마트의료웰니스관광 대학원 주임교수</strong>로서 한국 치유관광의 과학적 기반을 구축하는 데 선구적 역할을 하고 있습니다.<br><br>
-        <strong>뇌파(EEG) 기반 치유관광 효과 검증</strong> 연구를 국내 최초로 수행하였으며, K-MediWell 브랜드를 중심으로 디지털 디톡스, 국악 명상, 그릿 행복여행 등 혁신적 치유 프로그램을 개발하고 있습니다.<br><br>
-        YouTube 채널 <strong>「삶을 창조하는 여행」</strong> 운영 및 『정원수리듬법칙으로 영중일어 완전정복』 저술 등 학술과 대중 소통을 병행하며 활발하게 활동 중입니다.<br><br>
-        2026년 4월 시행된 <strong>치유관광산업 진흥법</strong>을 근거로 K-MediWell의 학술·산업적 확장을 이끌고 있습니다.
-      </p>
+    <div class="prof-grid">
+
+      <!-- 이용근 교수 -->
+      <div class="prof-card">
+        <div class="prof-avatar blue">이용근</div>
+        <div class="prof-name">이용근 교수</div>
+        <div class="prof-role">연구 책임자</div>
+        <div class="prof-title">
+          국립공주대학교<br>스마트의료웰니스관광 대학원 주임교수
+        </div>
+        <div class="prof-tags">
+          <span class="prof-tag">K-MediWell</span>
+          <span class="prof-tag">뇌과학</span>
+          <span class="prof-tag">치유관광</span>
+          <span class="prof-tag">웰니스</span>
+          <span class="prof-tag">그릿행복여행</span>
+        </div>
+        <p class="prof-bio">
+          <strong>뇌파(EEG) 기반 치유관광 효과 검증</strong> 연구를 국내 최초로 수행하였으며, K-MediWell 브랜드를 중심으로 디지털 디톡스, 국악 명상, 그릿 행복여행 등 혁신적 치유 프로그램을 개발하고 있습니다. 2026년 4월 시행된 <strong>치유관광산업 진흥법</strong>을 근거로 K-MediWell의 학술·산업적 확장을 이끌고 있습니다.
+        </p>
+      </div>
+
+      <!-- 김성원 원장 -->
+      <div class="prof-card">
+        <div class="prof-avatar green">김성원</div>
+        <div class="prof-name">김성원 원장</div>
+        <div class="prof-role">(가칭) 치유관광협회 추진위원장</div>
+        <div class="prof-title">
+          사단법인 한국치유요가협회(KTYA) 대표<br>
+          한국치유요가협회 원장
+        </div>
+        <div class="prof-tags">
+          <span class="prof-tag">치유요가</span>
+          <span class="prof-tag">웰니스</span>
+          <span class="prof-tag">치유관광</span>
+          <span class="prof-tag">필라테스</span>
+          <span class="prof-tag">통합테라피</span>
+        </div>
+        <p class="prof-bio">
+          2006년부터 치유요가 지도자 양성을 시작하여 <strong>사단법인 한국치유요가협회(KTYA)</strong>를 설립하고, 전국 157개 공인 교육관 네트워크를 구축한 한국 치유요가 분야의 선구자입니다. 재활·해부학·신경과학 관점을 결합한 <strong>근거 중심 치유 교육</strong>을 통해 K-MediWell 치유관광의 요가·신체 치유 분야를 이끌고 있습니다.
+        </p>
+        <a href="https://www.therapy-yoga.com" target="_blank" class="prof-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          한국치유요가협회 홈페이지 방문
+        </a>
+      </div>
+
+      <!-- 태원 스님 -->
+      <div class="prof-card">
+        <div class="prof-avatar amber">태원</div>
+        <div class="prof-name">태원 스님</div>
+        <div class="prof-role">(가칭) 치유관광협회 치유명상 추진위원장</div>
+        <div class="prof-title">
+          대전 법천사<br>
+          불교심리학 · FAWA 명상 수행자
+        </div>
+        <div class="prof-tags">
+          <span class="prof-tag">FAWA명상</span>
+          <span class="prof-tag">공존감</span>
+          <span class="prof-tag">불교심리학</span>
+          <span class="prof-tag">뇌과학명상</span>
+          <span class="prof-tag">치유관광</span>
+        </div>
+        <p class="prof-bio">
+          뇌과학(DMN 하향 조절)과 불교심리학(무아·연기·공)을 융합한 <strong>FAWA 4단계 수행 모델</strong>을 개발한 치유명상 전문가입니다. 자아 해체에서 공존감으로 나아가는 과학적 명상 프로그램을 통해 K-MediWell 치유관광의 <strong>마음·명상 치유 분야</strong>를 이끌고 있습니다.
+        </p>
+        <a href="teawon.html" target="_blank" class="prof-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+          FAWA 명상 플래시카드 보기
+        </a>
+      </div>
+
     </div>
   </div>
 </section>
