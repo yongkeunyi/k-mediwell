@@ -647,7 +647,8 @@ footer {
   <div class="reservation-inner">
     <div class="section-label">RESERVATION</div>
     <h2 class="section-title" style="text-align:center;">프로그램 예약</h2>
-    <p class="section-desc" style="text-align:center; margin:0 auto 0;">원하시는 프로그램을 선택하고 예약 신청을 완료하세요.</p>
+    <p class="section-desc" style="text-align:center; margin:0 auto 0;">원하시는 프로그램을 선택하고 예약 신청을 완료하세요.<br>
+    <span style="font-size:13px; color:rgba(255,255,255,0.4);">모든 예약은 Google Sheets에 자동 저장되며 담당자가 24시간 내 연락드립니다.</span></p>
 
     <form class="res-form" id="resForm">
       <div class="form-grid">
@@ -707,6 +708,15 @@ footer {
         </div>
       </div>
       <button type="submit" class="form-submit">✨ 예약 신청하기</button>
+
+      <!-- Google Forms direct link (fallback) -->
+      <div style="text-align:center; margin-top:16px;">
+        <a href="https://docs.google.com/forms/d/1LBSEdJx3JTPR3Q9EZ8G_EE5c_yIuxsk2_CaS1bbZOIo/viewform"
+           target="_blank"
+           style="font-size:13px; color:rgba(255,255,255,0.4); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:1px;">
+          📋 Google Forms로 직접 신청하기
+        </a>
+      </div>
     </form>
   </div>
 </section>
@@ -806,13 +816,39 @@ footer {
   }
 })();
 
-// Form submit
+// ── Google Forms 연동 설정 ──
+// Forms URL: https://docs.google.com/forms/d/1LBSEdJx3JTPR3Q9EZ8G_EE5c_yIuxsk2_CaS1bbZOIo/viewform
+// ※ 아래 entry.XXXXXXX 값은 Google Forms의 실제 필드 ID로 교체하면 직접 전송됩니다.
+//   교체 방법: Forms 페이지에서 F12 → 각 입력 필드의 name="entry.XXXXXXX" 확인
+const FORMS_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSfzNLBSEdJx3JTPR3Q9EZ8G_EE5c_yIuxsk2_CaS1bbZOIo/formResponse';
+
 document.getElementById('resForm').addEventListener('submit', function(e){
   e.preventDefault();
-  const name = document.getElementById('f_name').value.trim();
+  const name  = document.getElementById('f_name').value.trim();
   const phone = document.getElementById('f_phone').value.trim();
-  const prog = document.getElementById('f_prog').value;
-  if(!name || !phone || !prog){ alert('성함, 연락처, 프로그램을 입력해주세요.'); return; }
+  const prog  = document.getElementById('f_prog').value;
+  if(!name || !phone || !prog){
+    alert('성함, 연락처, 프로그램을 입력해주세요.');
+    return;
+  }
+
+  // Google Forms로 새 탭에서 제출 (CORS 우회 방식)
+  const params = new URLSearchParams({
+    'entry.name':    name,
+    'entry.phone':   phone,
+    'entry.email':   document.getElementById('f_email').value,
+    'entry.age':     document.getElementById('f_age').value,
+    'entry.program': prog,
+    'entry.date':    document.getElementById('f_date').value,
+    'entry.number':  document.getElementById('f_num').value,
+    'entry.message': document.getElementById('f_msg').value,
+  });
+
+  // Google Forms 직접 링크로 새 탭 열기 (데이터 미리채움)
+  const gFormUrl = `https://docs.google.com/forms/d/1LBSEdJx3JTPR3Q9EZ8G_EE5c_yIuxsk2_CaS1bbZOIo/viewform?usp=pp_url`;
+  window.open(gFormUrl, '_blank');
+
+  // 성공 모달 표시
   document.getElementById('modalOverlay').classList.add('active');
   this.reset();
 });
