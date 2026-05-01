@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공존감 플래시카드 — 자아 해체에서 전체성으로</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #EEF7EE;
+      color: #1A3A2A;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Header ── */
+    header {
+      width: 100%;
+      background-color: #2D7A4F;
+      color: #fff;
+      text-align: center;
+      padding: 28px 20px 20px;
+    }
+    header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    header p {
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    /* ── Category tabs ── */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px 16px 0;
+      max-width: 860px;
+      width: 100%;
+    }
+    .tab-btn {
+      background: #fff;
+      border: 2px solid #2D7A4F;
+      color: #2D7A4F;
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: #2D7A4F;
+      color: #fff;
+    }
+
+    /* ── Progress ── */
+    .progress-bar-wrap {
+      width: 100%;
+      max-width: 600px;
+      background: #D6EDD9;
+      border-radius: 8px;
+      height: 8px;
+      margin: 18px auto 0;
+    }
+    .progress-bar {
+      height: 8px;
+      background: linear-gradient(90deg, #2D7A4F, #C4622D);
+      border-radius: 8px;
+      transition: width 0.4s;
+    }
+    .progress-text {
+      text-align: center;
+      font-size: 13px;
+      color: #4A7A5A;
+      margin-top: 6px;
+    }
+
+    /* ── Card area ── */
+    .card-area {
+      perspective: 1200px;
+      margin: 28px auto 0;
+      width: 100%;
+      max-width: 600px;
+      padding: 0 16px;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      min-height: 320px;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card.flipped { transform: rotateY(180deg); }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      min-height: 320px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 36px 32px;
+      text-align: center;
+    }
+
+    /* Front */
+    .card-front {
+      background: #fff;
+      border: 2px solid #B8DFC0;
+      box-shadow: 0 6px 24px rgba(45, 122, 79, 0.12);
+    }
+    .card-front .category-badge {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #D6EDD9;
+      color: #2D7A4F;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .card-front .question {
+      font-family: 'Lora', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #1A3A2A;
+      line-height: 1.55;
+    }
+    .card-front .hint {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #7AAA8A;
+    }
+
+    /* Back */
+    .card-back {
+      background: linear-gradient(145deg, #2D7A4F 0%, #1A5C38 100%);
+      transform: rotateY(180deg);
+      box-shadow: 0 6px 24px rgba(45, 122, 79, 0.25);
+    }
+    .card-back .answer-label {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .card-back .answer {
+      font-family: 'Lora', serif;
+      font-size: 19px;
+      color: #fff;
+      line-height: 1.65;
+    }
+    .card-back .answer strong {
+      color: #FFD580;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .card-back .keyword {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.15);
+      color: #D6EDD9;
+      font-size: 13px;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 24px auto 0;
+      max-width: 600px;
+      padding: 0 16px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-prev { background: #D6EDD9; color: #2D7A4F; }
+    .btn-flip { background: #2D7A4F; color: #fff; }
+    .btn-next { background: #C4622D; color: #fff; }
+    .btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* ── Card counter ── */
+    .card-counter {
+      text-align: center;
+      font-size: 14px;
+      color: #4A7A5A;
+      margin-top: 12px;
+    }
+
+    /* ── All cards list ── */
+    .all-cards-section {
+      max-width: 860px;
+      width: 100%;
+      padding: 32px 16px 48px;
+      margin: 0 auto;
+    }
+    .all-cards-section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1A3A2A;
+      margin-bottom: 16px;
+      border-left: 4px solid #2D7A4F;
+      padding-left: 12px;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .mini-card {
+      background: #fff;
+      border: 1.5px solid #B8DFC0;
+      border-radius: 12px;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .mini-card:hover { box-shadow: 0 4px 16px rgba(45,122,79,0.15); border-color: #2D7A4F; }
+    .mini-card .mc-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #2D7A4F;
+      margin-bottom: 8px;
+    }
+    .mini-card .mc-q {
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      color: #1A3A2A;
+      line-height: 1.5;
+    }
+    .mini-card .mc-a {
+      display: none;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #2A4A35;
+      line-height: 1.5;
+      border-top: 1px solid #D6EDD9;
+      padding-top: 10px;
+    }
+    .mini-card.open .mc-a { display: block; }
+    .mini-card.open { border-color: #C4622D; }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #7AAA8A;
+      padding: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>공존감 플래시카드</h1>
+  <p>자아 해체에서 전체성으로 — 뇌과학·불교심리학·공존감의 핵심 개념</p>
+</header>
+
+<!-- Category Tabs -->
+<div class="tabs" id="tabs"></div>
+
+<!-- Progress -->
+<div style="max-width:600px;width:100%;padding:0 16px;margin:0 auto;">
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-text" id="progressText"></div>
+</div>
+
+<!-- Flip Card -->
+<div class="card-area">
+  <div class="card" id="mainCard" onclick="flipCard()">
+    <div class="card-face card-front">
+      <div class="category-badge" id="frontBadge"></div>
+      <div class="question" id="frontQ"></div>
+      <div class="hint">카드를 클릭하면 답이 나옵니다 ↩</div>
+    </div>
+    <div class="card-face card-back">
+      <div class="answer-label">Answer</div>
+      <div class="answer" id="backA"></div>
+      <div class="keyword" id="backKw"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button class="btn btn-prev" id="btnPrev" onclick="navigate(-1)">← 이전</button>
+  <button class="btn btn-flip" onclick="flipCard()">뒤집기</button>
+  <button class="btn btn-next" id="btnNext" onclick="navigate(1)">다음 →</button>
+</div>
+<div class="card-counter" id="cardCounter"></div>
+
+<!-- All cards grid -->
+<div class="all-cards-section">
+  <h2>전체 카드 목록 (클릭하여 답 확인)</h2>
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<footer>© 2026 공존감 연구 · 강태원 | #자아해체 #공존감 #뇌과학 #불교심리학 #FAWA수행</footer>
+
+<script>
+const ALL_CARDS = [
+  // ── 생존 알고리즘
+  {
+    cat: "생존 알고리즘",
+    q: "인류가 진화 과정에서 형성한 두 가지 원시적 생존 반응은?",
+    a: "<strong>도피(Flight)</strong>와 <strong>투쟁(Fight)</strong>. 자기보존 의지에서 비롯된 신경 반응 시스템으로, 급박한 위협으로부터 인류를 보호했다.",
+    kw: "#생존알고리즘 #FightOrFlight"
+  },
+  {
+    cat: "생존 알고리즘",
+    q: "진화적 생존 알고리즘의 역기능은 무엇인가?",
+    a: "'<strong>나 vs 세계</strong>'라는 이원적 분리 인식을 심화시켜, 내적 갈등·종족 갈등·전쟁으로 확장되는 근원적 분리 의식을 낳는다.",
+    kw: "#분리인식 #이원성"
+  },
+  // ── 자아와 뇌과학
+  {
+    cat: "자아와 뇌과학",
+    q: "예측 부호화(Predictive Coding)란 무엇인가?",
+    a: "뇌가 과거 경험을 바탕으로 <strong>상위 예측 모델(시뮬레이션)</strong>을 구성하고 감각 입력과 비교하여 지속적으로 업데이트하는 인지 메커니즘.",
+    kw: "#예측부호화 #PredictiveCoding"
+  },
+  {
+    cat: "자아와 뇌과학",
+    q: "자아의 두 층위는 무엇인가?",
+    a: "<strong>최소 자아(Minimal Self)</strong>: 신체 감각 기반의 즉각적 자기 인식. <strong>내러티브 자아(Narrative Self)</strong>: 기억·언어로 구성된 연속적 정체성.",
+    kw: "#최소자아 #내러티브자아"
+  },
+  {
+    cat: "자아와 뇌과학",
+    q: "DMN(Default Mode Network)의 주요 기능은?",
+    a: "내측 전전두피엽(mPFC)·후대상피질(PCC) 등으로 구성. <strong>과거 회상, 미래 시뮬레이션, 연속적 자아 정체성 유지</strong> — 에고적 바인딩(Egoic Binding)의 원천.",
+    kw: "#DMN #기본모드네트워크"
+  },
+  {
+    cat: "자아와 뇌과학",
+    q: "DMN 과잉 활성이 초래하는 문제는?",
+    a: "좁은 주관적 렌즈로 현실을 해석하며 <strong>자아와 세계 사이의 분리 장벽을 강화</strong>한다. 반추, 불안, 자기중심적 사고의 신경학적 기반이 된다.",
+    kw: "#DMN과잉 #자아장벽"
+  },
+  {
+    cat: "자아와 뇌과학",
+    q: "자아 해체 시 세 신경망(DMN·SN·CEN)의 변화는?",
+    a: "<strong>DMN</strong>: 활동 감소, 내러티브 약화 / <strong>SN(세일리언스 네트워크)</strong>: 역할 재편, 감각 직접성 증가 / <strong>CEN(중앙 집행 네트워크)</strong>: 활성화 증가, 맥락 인식 확장.",
+    kw: "#SN #CEN #신경네트워크"
+  },
+  // ── 불교심리학
+  {
+    cat: "불교심리학",
+    q: "불교의 무아(Anatta) 개념과 뇌과학의 연결점은?",
+    a: "무아는 고정된 자아 실체의 부재를 의미하며, 뇌과학의 <strong>예측 부호화 모델</strong>에서 자아가 동적 관계구조의 과정임을 보여주는 것과 일치한다.",
+    kw: "#무아 #Anatta #불교심리학"
+  },
+  {
+    cat: "불교심리학",
+    q: "연기(緣起, Pratītyasamutpāda)의 핵심 의미는?",
+    a: "모든 현상은 독립적으로 존재하지 않고 <strong>상호 의존적 조건 속에서 발생</strong>한다. 자아 역시 관계망 속에서 생성·소멸하는 과정임을 시사한다.",
+    kw: "#연기 #상호의존 #공존"
+  },
+  {
+    cat: "불교심리학",
+    q: "공(空, Śūnyatā)은 무엇을 의미하는가?",
+    a: "모든 현상이 <strong>고정된 자성(自性)이 없음</strong>을 뜻한다. 이는 자아 내러티브의 해체가 허무가 아닌 더 넓은 관계적 실재로의 개방임을 함의한다.",
+    kw: "#공 #Sunyata #자아해체"
+  },
+  // ── FAWA 수행 모델
+  {
+    cat: "FAWA 수행",
+    q: "FAWA 수행 모델의 4단계는 무엇인가?",
+    a: "<strong>F</strong>ollow(따라가기) → <strong>A</strong>bsorb(흡수하기) → <strong>W</strong>atchful(깨어 지켜보기) → <strong>A</strong>wareness(순수 알아차림). 각 단계는 DMN 하향 조절과 공존감 심화에 대응한다.",
+    kw: "#FAWA #선명상 #수행단계"
+  },
+  {
+    cat: "FAWA 수행",
+    q: "FAWA의 Follow 단계에서 일어나는 신경학적 변화는?",
+    a: "의도적 주의 집중을 통해 <strong>DMN 활동이 초기 감소</strong>하고, SN이 활성화되어 현재 감각 경험으로 주의가 전환되기 시작한다.",
+    kw: "#Follow #DMN감소 #SN활성"
+  },
+  {
+    cat: "FAWA 수행",
+    q: "FAWA의 Awareness 단계의 특징은?",
+    a: "자아와 대상의 경계가 용해되는 <strong>순수 알아차림(Pure Awareness)</strong> 상태. CEN이 최대 활성화되고 DMN은 최소화되며, 전체성과 공존감이 직접 체험된다.",
+    kw: "#Awareness #순수알아차림 #공존감"
+  },
+  // ── 자아 해체 3단계
+  {
+    cat: "자아 해체 3단계",
+    q: "자아 해체의 신경인지 3단계 모델은?",
+    a: "<strong>1단계 Detachment</strong>: 자아 집착 이완 / <strong>2단계 Deconstruction</strong>: 내러티브 해체 / <strong>3단계 Re-identification</strong>: 더 넓은 관계망 속 자아 재정립.",
+    kw: "#자아해체 #3단계모델"
+  },
+  {
+    cat: "자아 해체 3단계",
+    q: "자아 해체는 자아의 소멸인가?",
+    a: "아니다. 자아 해체는 <strong>폐쇄적 자아 내러티브의 해체</strong>이며, 이를 통해 더 넓은 관계망 속에서 주체를 재정립하는 능동적 재편 과정이다.",
+    kw: "#자아재정립 #ReIdentification"
+  },
+  // ── 공존감 3단계
+  {
+    cat: "공존감 3단계",
+    q: "공존감(Sense of Coexistence)이란 무엇인가?",
+    a: "나와 세계가 분리된 실체가 아니라 <strong>상호 연결된 전체</strong>임을 인식하고 체감하는 상태. 자아 해체 이후 발현되는 관계적·생태적 자각.",
+    kw: "#공존감 #SenseOfCoexistence"
+  },
+  {
+    cat: "공존감 3단계",
+    q: "공존감 찾기(Discovering)의 핵심은?",
+    a: "DMN 하향 조절을 통해 <strong>자아 경계를 해체</strong>하고, '나와 세계는 분리되어 있는가?'라는 인식의 전환을 이루는 단계. FAWA의 Follow·Absorb에 대응.",
+    kw: "#공존감찾기 #Discovering"
+  },
+  {
+    cat: "공존감 3단계",
+    q: "공존감 키우기(Cultivating)의 핵심은?",
+    a: "SN·CEN 활성화를 통해 <strong>공감적 수용력과 관계적 정체성</strong>을 내면화하는 단계. '나는 어떤 관계망 속에 존재하는가?'를 자각. FAWA의 Watchful에 대응.",
+    kw: "#공존감키우기 #Cultivating #신경가소성"
+  },
+  {
+    cat: "공존감 3단계",
+    q: "공존감 살리기(Actualizing)의 핵심은?",
+    a: "확장된 의식을 <strong>생태적 연대·이타적 실천</strong>으로 발현하는 단계. '전체의 조화를 위해 무엇을 할 것인가?'를 행동으로 구현. FAWA의 Awareness에 대응.",
+    kw: "#공존감살리기 #Actualizing #생태연대"
+  },
+  // ── 통합 결론
+  {
+    cat: "통합 결론",
+    q: "뇌과학과 불교심리학이 공통으로 가리키는 핵심 통찰은?",
+    a: "자아는 <strong>동적 관계구조의 과정</strong>이며 고정된 실체가 아니다. 두 학문 모두 DMN 하향 조절 → 자아 해체 → 전체성 발현의 흐름을 지지한다.",
+    kw: "#뇌과학 #불교심리학 #통합"
+  },
+  {
+    cat: "통합 결론",
+    q: "향후 연구의 핵심 방향은?",
+    a: "① fMRI 종단 연구로 3단계 활성 패턴 추적 ② 바이오피드백 기반 안정 유도 프로토콜 개발 ③ <strong>공존감 실천 아카이브</strong> 구축 및 neurobrain fwaves 연구.",
+    kw: "#향후연구 #fMRI #바이오피드백"
+  },
+];
+
+// ── State
+let currentIndex = 0;
+let currentCat = "전체";
+let filtered = [...ALL_CARDS];
+
+function getFiltered() {
+  return currentCat === "전체" ? ALL_CARDS : ALL_CARDS.filter(c => c.cat === currentCat);
+}
+
+// ── Tabs
+const cats = ["전체", ...new Set(ALL_CARDS.map(c => c.cat))];
+const tabsEl = document.getElementById("tabs");
+cats.forEach(cat => {
+  const btn = document.createElement("button");
+  btn.className = "tab-btn" + (cat === "전체" ? " active" : "");
+  btn.textContent = cat;
+  btn.onclick = () => {
+    currentCat = cat;
+    currentIndex = 0;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    filtered = getFiltered();
+    renderCard();
+    renderGrid();
+  };
+  tabsEl.appendChild(btn);
+});
+
+// ── Render main card
+function renderCard() {
+  filtered = getFiltered();
+  const card = filtered[currentIndex];
+  document.getElementById("frontBadge").textContent = card.cat;
+  document.getElementById("frontQ").textContent = card.q;
+  document.getElementById("backA").innerHTML = card.a;
+  document.getElementById("backKw").textContent = card.kw;
+  document.getElementById("mainCard").classList.remove("flipped");
+  document.getElementById("btnPrev").disabled = currentIndex === 0;
+  document.getElementById("btnNext").disabled = currentIndex === filtered.length - 1;
+  document.getElementById("cardCounter").textContent = `${currentIndex + 1} / ${filtered.length}`;
+  const pct = ((currentIndex + 1) / filtered.length) * 100;
+  document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressText").textContent = `진행률 ${Math.round(pct)}%`;
+}
+
+function flipCard() {
+  document.getElementById("mainCard").classList.toggle("flipped");
+}
+
+function navigate(dir) {
+  filtered = getFiltered();
+  currentIndex = Math.max(0, Math.min(filtered.length - 1, currentIndex + dir));
+  renderCard();
+}
+
+// ── Render grid
+function renderGrid() {
+  filtered = getFiltered();
+  const grid = document.getElementById("cardsGrid");
+  grid.innerHTML = "";
+  filtered.forEach((card, i) => {
+    const div = document.createElement("div");
+    div.className = "mini-card";
+    div.innerHTML = `<div class="mc-badge">${card.cat}</div><div class="mc-q">${card.q}</div><div class="mc-a">${card.a}<br><span style="font-size:12px;color:#7AAA8A;">${card.kw}</span></div>`;
+    div.onclick = () => {
+      div.classList.toggle("open");
+    };
+    grid.appendChild(div);
+  });
+}
+
+// ── Keyboard navigation
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") navigate(1);
+  else if (e.key === "ArrowLeft" || e.key === "ArrowUp") navigate(-1);
+  else if (e.key === " " || e.key === "Enter") { e.preventDefault(); flipCard(); }
+});
+
+// ── Init
+filtered = getFiltered();
+renderCard();
+renderGrid();
+</script>
+</body>
+</html>
